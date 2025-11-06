@@ -1,0 +1,127 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    outline: none;
+    /* outline: 1px dashed; */
+}
+
+::-webkit-scrollbar
+{
+    width: 0px;
+    height: 80%;
+    background-color: transparent;
+}
+::-webkit-scrollbar-track
+{
+    background:rgb(24, 24, 24);
+}
+p::-webkit-scrollbar-track
+{
+    background:transparent;
+}
+::-webkit-scrollbar-thumb
+{
+    background-color:#2a2a2a;
+    width: 3px;
+    border-radius: 20px;
+}
+::-webkit-scrollbar:hover ::-webkit-scrollbar-thumb{
+  width: 3px;
+}
+
+input
+{
+    /* outline: none; */
+    border: none;
+}
+
+
+@font-face {
+    font-family: font1;
+    src: url(./assets/fonts/Roboto-VariableFont_wdth\,wght.ttf);
+}
+
+@font-face {
+    font-family: header;
+    src: url(./assets/fonts/FjallaOne-Regular.ttf);
+}
+
+.hover , .hoverTab , .hoverMinTab , .hoverProdTab
+{
+    cursor: pointer;
+    transition: all ease-in .2s;
+}
+.hover:hover , .hoverTab:hover , .hoverMinTab:hover , .hoverProdTab:hover
+{
+    transform: scale(1.05);
+}
+
+.hoverTab , .hoverMinTab , .hoverProdTab
+{
+    position: relative;
+    isolation: isolate;
+}
+.hoverTab::after , .hoverMinTab::after , .hoverProdTab::after
+{
+    height:100%;
+    width: 100%;
+    content: "Click to add Design";
+    font-family: font1;
+    font-size: 13px;
+    font-weight: 700;
+    color:rgb(234, 232, 232);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color:rgba(0, 0, 0, 0.15);
+    z-index: -1;
+    opacity:0;
+    transition: all ease-in .3s;
+}
+
+.hoverMinTab::after
+{
+    content: "";
+}
+
+.hoverProdTab::after
+{
+    content: "Select Product";
+}
+
+.hoverTab:hover::after , .hoverMinTab:hover::after , .hoverProdTab:hover::after
+{
+    opacity: 1;
+}
+
+.rotate {
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.img_ring{
+    position: relative;
+}
+
+.img_ring::after
+{
+    content: "";
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    height: calc(100% + 3px);
+    width: calc(100% + 3px);
+    border-radius: inherit;
+    border: 2px solid #000000;
+}

@@ -484,7 +484,6 @@ __SYD.orderMain_main_el = function({data})
     const sizeMode = `${__p(["orderMain_main","sizeMode"],0)}`;
     const sizeModeObj = {"0":"350px","1":"200px","2":"150px"}
 
-    console.log(data)
     return $(
         "div",
         {
@@ -515,6 +514,7 @@ __SYD.orderMain_main_el = function({data})
             genericStyle:["bg_fit"],
             events:{
                 onclick:e =>{
+                    console.log(data);
                     updateState__bulk({name:"viewOrder",task:s=>{
                         s.product = data;
                         s.isActive = true;

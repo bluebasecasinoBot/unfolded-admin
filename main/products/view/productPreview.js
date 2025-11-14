@@ -1,4 +1,5 @@
 import { $, __p, __sC, __SYD, SYD_VAR } from "../../../sydneyDom_v3.js";
+import { deleteProduct, fetchProducts } from "../../../utils/routes.js";
 import { updateState, updateState__bulk } from "../../../utils/stateAssets.js";
 
 function closeProductPreview()
@@ -24,7 +25,8 @@ __SYD.productPreview = function()
                     display:false,
                     currentProduct:{},
                     currentClrIndex:0,
-                    currentClothIndex:0
+                    currentClothIndex:0,
+                    isDeleting:false
                 }
             },
             mediaQuery:{
@@ -210,60 +212,49 @@ __SYD.productPreview_deleteBtn = function()
     return $(
         "div",
         {
-            style:`height:50px;width:calc(100% - 20px);position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:${SYD_VAR.err.get()};border-radius:inherit;font-weight:700;font-size:${__p(["subContainer","fontHeader"],"15px")};color:${"#ffffff"};box-shadow:1px 1px 3px #2323237f;`+__sC["row-center"](),
+            style:`height:50px;width:calc(100% - 20px);position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:${SYD_VAR.err.get()};border-radius:inherit;font-weight:400;font-size:${__p(["subContainer","fontHeader"],"15px")};color:${"#ffffff"};box-shadow:1px 1px 3px #2323237f;`+__sC["row-center"]({method:"add",style:{gap:"5px"}}),
             class:"hover"
         },
         [
+            $(
+                "div",
+                {
+                    style:`height:20px;width:20px;background-image:url(./assets/images/${__p(["productPreview","isDeleting"],false) ? "loading_w" : "delete_w"}.svg);`,
+                    class:`hover ${__p(["productPreview","isDeleting"],false)?"rotate":""}`
+                },[],{genericStyle:["bg_cover"],events:{onclick:e=>changeTabDisplay("grid")}}
+            ),
             "Delete Product"
         ],
         {
             events:{
-                onclick:e=>{
-                    // const {currentProduct , currentClrIndex} = __p(["productPreview"]);
+                onclick:async e=>{
+                    //fetch info
+                    const {currentProduct} = __p(["productPreview"]);
+                    const {product_id} = currentProduct;
+                    const payload = {product_id , publicIds:[]};
 
-                    // const fronts = currentProduct.uploads.map(val => val.front?.url)[currentClrIndex];
-                    // const backs = currentProduct.uploads.map(val => val.back?.url)[currentClrIndex];
-                    // const sides = currentProduct.uploads.map(val => val.side?.url)[currentClrIndex];
+                    for(let i = 0; i < currentProduct.uploads.length; i++)
+                    {
+                        if(currentProduct.uploads[i].front)payload.publicIds.push(currentProduct.uploads[i].front.id);
+                        if(currentProduct.uploads[i].back)payload.publicIds.push(currentProduct.uploads[i].back.id);
+                        if(currentProduct.uploads[i].side)payload.publicIds.push(currentProduct.uploads[i].side.id);
+                    }
+                    
+                    //fetch info
 
-                    // const featureImages = [fronts , backs , sides].filter(links => links);
+                    updateState({name:"productPreview",prop:"isDeleting",value:true});
 
-                    // updateState__bulk({name:"canvasHousing",task:s=>{
-                    //     for(let i = 0; i < featureImages.length; i++)
-                    //     {
-                    //         if(s.elements[i] === undefined) s.elements.push([]);
-                    //     }
-                        
-                    //     s.hasProduct = true;
-                    //     //clear product data array
-                    //     s.productData = [];
-                    //     //clear product data array
+                    await deleteProduct(payload);
 
-                    //     let imgCount = 0;
+                    updateState({name:"productPreview",prop:"isDeleting",value:false});
 
-                    //     for(let i = 0; i < featureImages.length; i++)
-                    //     {
-                    //         const image = new Image();
-                    //         image.crossOrigin = "anonymous";
-                    //         image.src = featureImages[i];
+                    //close the product preview tab
+                    closeProductPreview()
+                    //close the product preview tab
 
-                    //         image.onload = () =>{
-                    //             imgCount++;
-                    //             if(imgCount === featureImages.length)
-                    //             {
-                    //                 updateState({name:"canvasMain",prop:"currentTab",value:0});
-                    //                 updateState({name:"sideNav",prop:"currentTab",value:0});
-                    //                 const timer = setTimeout(() => {
-                    //                     clearTimeout(timer);
-                    //                     // draw();
-                    //                 }, 300);
-                    //             }
-                    //         }
-                            
-                    //         s.productData.push(image);
-                    //     }
-
-                    //     return s;
-                    // }});
+                    //refresh the product tab
+                    await fetchProducts();
+                    //refresh the product tab
                 }
             }
         }

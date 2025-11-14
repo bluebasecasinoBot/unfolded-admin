@@ -67,7 +67,6 @@ __m(__SYD.container() , async () =>{
     manage_mediaQuery(window.innerWidth);
     //Run initiating code here
 
-    closeMainView("loading products");
     //run the products
     fetchProducts();
 })

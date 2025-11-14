@@ -107,7 +107,24 @@ __sS([
             width:"70px",
             background:"green"
         }
-    }
+    },
+    {
+        nameTag:"dashboard",
+        style:{
+            height:"100%",
+            width:"100%",
+            // background:"green",
+            padding:"10px",
+            paddingTop:"calc(80px + 50px)",
+            paddingBottom:"30px",
+            // paddingLeft:"20px",
+            zIndex:"5",
+            overflowX:"hidden",
+            overflowY:"scroll",
+            position:"relative",
+            transition:"none"
+        }
+    },
 ])
 
 

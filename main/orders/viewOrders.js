@@ -1,4 +1,5 @@
 import { $, __p, __sC, __SYD, SYD_VAR } from "../../sydneyDom_v3.js";
+import { deleteOrder, fetchOrders } from "../../utils/routes.js";
 import { updateState } from "../../utils/stateAssets.js";
 
 //import preview
@@ -26,7 +27,8 @@ __SYD.viewOrder = function()
                     isActive:false,
                     isOrder:false,
                     product:{},
-                    isMobile:false
+                    isMobile:false,
+                    isDeleting:false
                 }
             },
             mediaQuery:{
@@ -42,7 +44,7 @@ __SYD.viewOrder_main = function()
     return $(
         "div",
         {
-            style:"height:100%;width:100%;max-width:700px;background:#ffffff;box-shadow:1px 1px 3px rgba(35, 35, 35, 0.3);padding:20px;position:relative;padding-bottom:80px;overflow:hidden;"+__sC["br-1"]() + __sC["col-start"]({method:"add",style:{gap:"15px"}})
+            style:"height:100%;width:100%;max-width:700px;background:#ffffff;box-shadow:1px 1px 3px rgba(35, 35, 35, 0.3);padding:20px 10px;position:relative;padding-bottom:80px;overflow:hidden;"+__sC["br-1"]() + __sC["col-start"]({method:"add",style:{gap:"15px"}})
         },
         [
             //header name
@@ -76,9 +78,9 @@ __SYD.viewOrder_main = function()
                     __SYD.viewOrder_formEl_txtArea({name:"Additional Details(Optional)" , type:"clientDetails" , placeholder:"Additional information"}),
                 ]
             ),
-            __SYD.viewOrder_submit(),
             __SYD.viewOrder_preview(),
-            // __SYD.viewOrder_preview(),
+            __SYD.viewOrder_submit(),
+            __SYD.viewOrder_deleteOrder(),
             __SYD.viewOrder_close(),
             __SYD.viewOrder_Finalpreview()
         ]
@@ -111,7 +113,7 @@ __SYD.viewOrder_formEl = function({name , type , placeholder="" , iType = "text"
             $(
                 "div",
                 {
-                    style:`outline:none;border:none;height:50px;width:100%;padding:0px 15px;font-family:font1;font-size:${__p(["subContainer","fontSmall"],"13px")};box-shadow:1px 1px 3px #2323237f;font-weight:600;color:${SYD_VAR.baseGreyTxt.get()};`+__sC["br-.5"]()+__sC["row-start"]({method:"add",style:{alignItems:"Center"}}),
+                    style:`outline:none;border:none;height:50px;width:100%;padding:0px 15px;font-family:font1;font-size:${__p(["subContainer","fontSmall"],"13px")};font-weight:600;color:${SYD_VAR.baseGreyTxt.get()};`+__sC["br-.5"]()+__sC["row-start"]({method:"add",style:{alignItems:"Center"}})+__sC["thinBorder"](),
                     type:iType,
                     name:name,
                     id:name,
@@ -136,7 +138,7 @@ __SYD.viewOrder_formEl_txtArea = function({name , type , placeholder="" , iType 
     return $(
         "div",
         {
-            style:__sC["col-start"]({method:"add",style:{gap:"15px",padding:"0px 0px",width:"100%"}})
+            style:__sC["col-start"]({method:"add",style:{gap:"15px",padding:"0px 0px",width:"100%",display:value.length === 0 ? "none" : "flex"}})
         },
         [
             $(
@@ -151,7 +153,7 @@ __SYD.viewOrder_formEl_txtArea = function({name , type , placeholder="" , iType 
             $(
                 "div",
                 {
-                    style:`outline:none;border:none;height:fit-content;width:100%;padding:15px;font-family:font1;resize:none;font-size:${__p(["subContainer","fontSmall"],"13px")};box-shadow:1px 1px 3px #2323237f;font-weight:600;color:${value.length === 0 ?"grey":SYD_VAR.baseGreyTxt.get()};`+__sC["br-.5"]()+__sC["row-start"]({method:"add",style:{alignItems:"Center"}}),
+                    style:`outline:none;border:none;height:fit-content;width:100%;padding:15px;font-family:font1;resize:none;font-size:${__p(["subContainer","fontSmall"],"13px")};font-weight:600;color:${value.length === 0 ?"grey":SYD_VAR.baseGreyTxt.get()};`+__sC["br-.5"]()+__sC["row-start"]({method:"add",style:{alignItems:"flex-start",minHeight:"100px"}})+__sC["thinBorder"](),
                     type:iType,
                     name:name,
                     id:name,
@@ -221,7 +223,7 @@ __SYD.viewOrder_preview = function()
     return $(
         "div",
         {
-            style:`height:50px;width:fit-content;position:absolute;left:10px;bottom:20px;background:${SYD_VAR.themeClr.get()};border-radius:inherit;font-size:${__p(["subContainer","fontHeader"],"15px")};color:${SYD_VAR.baseGreyTxt.get()};box-shadow:1px 1px 3px #2323237f;padding:10px 15px;color:#ffffff;`+__sC["row-center"]({method:"add",style:{gap:"5px"}}),
+            style:`height:50px;width:100%;background:${SYD_VAR.themeClr.get()};border-radius:inherit;font-size:${__p(["subContainer","fontHeader"],"15px")};color:${SYD_VAR.baseGreyTxt.get()};box-shadow:1px 1px 3px #2323237f;padding:10px 15px;transform:scale(1);color:#ffffff;`+__sC["row-center"]({method:"add",style:{gap:"5px"}}),
             class:"hover"
         },
         [
@@ -240,6 +242,59 @@ __SYD.viewOrder_preview = function()
                     if(__p(["viewOrder","isActive"],false))
                     {
                         updateState({name:"viewOrder_Finalpreview",prop:"display",value:true})
+                    }
+                }
+            }
+        }
+    )
+}
+
+
+__SYD.viewOrder_deleteOrder = function()
+{
+    return $(
+        "div",
+        {
+            style:`height:50px;width:fit-content;position:absolute;left:10px;bottom:20px;background:${SYD_VAR.err.get()};border-radius:inherit;font-size:${__p(["subContainer","fontHeader"],"15px")};color:${"#ffffff"};box-shadow:1px 1px 3px #2323237f;padding:10px 15px;color:#ffffff;`+__sC["row-center"]({method:"add",style:{gap:"5px"}}),
+            class:"hover"
+        },
+        [
+            $(
+                "div",
+                {
+                    style:`height:20px;width:20px;background-image:url(./assets/images/${__p(["viewOrder","isDeleting"],false) ? "loading_w" : "delete_w"}.svg);`,
+                    class:`hover ${__p(["viewOrder","isDeleting"],false) ? "rotate" : ""}`
+                },[],{genericStyle:["bg_cover"],events:{onclick:e=>changeTabDisplay("grid")}}
+            ),
+            `${__p(["viewOrder","isMobile"],false) ? "Delete" : "Delete Order"}`
+        ],
+        {
+            events:{
+                onclick:async e=>{
+                    const {product} = __p(["viewOrder"]);
+                    if(product)
+                    {
+                        const {orderID , finalDesign} = product;
+                        const payload = {orderID , publicIds:[]};
+
+                        for(let i = 0; i < finalDesign.length; i++)
+                        {
+                            payload.publicIds.push(finalDesign[i].id)
+                        }
+
+                        updateState({name:"viewOrder",prop:"isDeleting",value:true});
+                        
+                        await deleteOrder(payload);
+
+                        updateState({name:"viewOrder",prop:"isDeleting",value:false});
+
+                        //close the product preview tab
+                        closeviewOrder()
+                        //close the product preview tab
+    
+                        //refresh the product tab
+                        await fetchOrders();
+                        //refresh the product tab
                     }
                 }
             }

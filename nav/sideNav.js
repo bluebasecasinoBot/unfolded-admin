@@ -53,7 +53,7 @@ __SYD.sideMenu = function()
                 "span",
                 {class:"highlight_icon",style:"background-image:url(./assets/images/menu.svg);height:25px;width:25px;"},[],{genericStyle:["bg_fit"]}
             ),
-            $("p",{style:`display:${__p(["sideNav","width"],"200px") === "70px"?"none":__p(["sideNav","shift"],false)?"none":"block"};font-size:${__p(["subContainer","fontHeader"],"13px")};color:${SYD_VAR.headerClr.get()};`+__sC["n-txt"]()+__sC["no-txt"]()},["Menu"])
+            $("p",{style:`display:${__p(["sideNav","width"],"200px") === "70px"?"none":__p(["sideNav","shift"],false)?"none":"block"};font-size:${__p(["subContainer","fontHeader"],"13px")};color:${"#ffffff"};`+__sC["n-txt"]()+__sC["no-txt"]()},["Menu"])
         ],{events:{onclick:toggleSideNav}}
     )
 }

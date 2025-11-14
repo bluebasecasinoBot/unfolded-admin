@@ -1,5 +1,7 @@
 import { $, __p, __sC, __SYD, __v, SYD_VAR } from "../../../sydneyDom_v3.js";
+import { fetchProducts } from "../../../utils/routes.js";
 import { updateState, updateState__bulk, updateState__push } from "../../../utils/stateAssets.js";
+import { updateScreen } from "../mainScript.js";
 
 class newUpload
 {
@@ -396,13 +398,25 @@ async function uploadProduct(productData)
 
     const response = await res.json();
 
+    if(res.status === 200)
+    {
+        //notify the user on success
+        __p(["notification","show"])({title:"Product Creation" , msg:"Products Created successfully" , mode:"success"});
+        //notify the user on success
+    }else
+    {
+        //notify the user on failed
+        __p(["notification","show"])({title:"Product Creation" , msg:"Failed to Create Product" , mode:"fail"});
+        //notify the user on failed
+    }
+
     //clear create parcel
     updateState__bulk({name:"adminProductCreate",task:s=>{
         s.product_name = "";
         s.product_type = "";
         s.uploads = [];
         return s;
-    }})
+    },isDiff:false})
     //clear create parcel
 
     updateState__bulk({name:"isLoading",task:s=>{
@@ -418,5 +432,11 @@ async function uploadProduct(productData)
 
     //switch to view panel
 
-    console.log(response , res.status);
+    //click the view button to switch
+    updateScreen("view");
+    //click the view button to switch
+
+    //reload the products page
+    fetchProducts();
+    //reload the products page
 }

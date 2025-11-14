@@ -3,7 +3,7 @@ import { updateState } from "../../utils/stateAssets.js";
 import "./create/script.js";
 import "./view/script.js";
 
-function updateScreen(mode)
+export function updateScreen(mode)
 {
     updateState({name:"productsMain",prop:"currentTab",value:mode === "view"?0:1})
 }

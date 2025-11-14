@@ -429,7 +429,9 @@ __SYD.orderMain_main = function()
                     gap:"15px",
                     flexWrap:"wrap",
                     alignItems:"flex-start",
-                    padding:"20px"
+                    padding:"20px",
+                    justifyContent:__p(["orderMain_main","tabType"],"grid") === "grid"?"center":"flex-start",
+                    flexDirection:__p(["orderMain_main","tabType"],"grid") === "grid"?"row":"column"
                 }
             })+__sC["thinBorder"]({method:"add",style:{borderBottom:"unset",borderLeft:"unset",borderRight:"unset"}})
         },
@@ -553,7 +555,7 @@ __SYD.orderMain_main_el_tabType = function({data})
                     style:"min-height:50px;width:100%;padding:0px 10px;"+__sC["row-start"]()
                 },
                 [
-                    $("p",{style:`overflow:hidden;max-width:90%;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:${__p(["subContainer","fontSmall"],"13px")};`},[
+                    $("p",{style:`overflow:hidden;max-width:80%;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:${__p(["subContainer","fontSmall"],"13px")};`},[
                         "OrderID: ",$("span",{style:"font-weight:300;"},[data.orderID])
                     ])
                 ]
